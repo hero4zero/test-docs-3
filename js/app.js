@@ -102,11 +102,50 @@ function initGlobe(){
   const sun=new THREE.DirectionalLight(0x00ff88,1.2); sun.position.set(3,2,5); scene.add(sun);
   const sun2=new THREE.DirectionalLight(0x00c8ff,0.4); sun2.position.set(-3,-2,-3); scene.add(sun2);
   function ll(lat,lon,r=1.015){const phi=(90-lat)*Math.PI/180,theta=(lon+180)*Math.PI/180;return new THREE.Vector3(-r*Math.sin(phi)*Math.cos(theta),r*Math.cos(phi),r*Math.sin(phi)*Math.sin(theta));}
-  const saBorder=[[37,36.8],[32.5,38],[29.2,34.9],[27.5,35.1],[26,37.3],[23,37.5],[19,42.5],[15.6,42.6],[16,47.5],[17.5,52],[20.5,58],[22.5,59.5],[23.6,57],[24,56.4],[24.5,54.9],[26,55.1],[26.5,56],[27.5,55.7],[27,52],[29.5,49],[32,46.5],[32.5,44.6],[34,41.2],[37,36.8]];
-  const saLine=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(saBorder.map(([a,b])=>ll(a,b,1.012))),new THREE.LineBasicMaterial({color:0x00ff88,linewidth:2}));
-  scene.add(saLine);
-  const saSprite=new THREE.Mesh(new THREE.SphereGeometry(0.12,16,16),new THREE.MeshBasicMaterial({color:0x00ff88,transparent:true,opacity:0.18}));
-  saSprite.position.copy(ll(24,45,1.0)); scene.add(saSprite);
+  // World country borders — loaded async from world-atlas topojson
+  const worldGroup = new THREE.Group();
+  scene.add(worldGroup);
+  fetch('https://unpkg.com/world-atlas@2/countries-110m.json')
+    .then(r => r.json())
+    .then(world => {
+      const borders = topojson.mesh(world, world.objects.countries);
+      borders.coordinates.forEach(coords => {
+        const pts = coords.map(([lon, lat]) => ll(lat, lon, 1.003));
+        const geo = new THREE.BufferGeometry().setFromPoints(pts);
+        const mat = new THREE.LineBasicMaterial({ color: 0x00ff88, transparent: true, opacity: 0.22, depthTest: true });
+        const line = new THREE.Line(geo, mat);
+        line.renderOrder = 1;
+        worldGroup.add(line);
+      });
+    })
+    .catch(() => {});
+  // Accurate Saudi Arabia border — clockwise from NW (Gulf of Aqaba)
+  const saBorder = [
+    [29.5,34.9],[29.1,35.7],[29.7,36.5],[30.5,37.0],[31.0,37.7],[32.0,38.9],
+    [32.0,39.2],[32.0,40.5],[31.8,42.0],[31.0,43.5],[30.0,44.7],[29.3,45.6],[29.1,46.5],
+    [28.5,47.5],[28.0,48.1],
+    [27.5,48.8],[26.6,49.9],[25.8,50.3],[25.3,50.8],[24.8,51.2],[24.2,51.6],
+    [23.8,51.8],[23.2,52.5],[22.8,53.5],[22.5,55.0],[22.1,55.7],
+    [21.0,57.0],[20.0,57.8],[19.2,57.5],[18.6,56.2],
+    [18.0,53.8],[17.5,51.0],[16.8,47.8],[16.2,45.0],[15.6,42.8],
+    [16.5,42.1],[17.5,41.5],[18.5,41.0],[19.5,40.5],[21.0,39.5],
+    [22.5,38.8],[24.0,37.5],[25.5,36.8],[27.0,35.8],[28.3,35.1],[29.5,34.9]
+  ];
+  // Glow layers: outermost (wide/transparent) → core (thin/white)
+  const saGroup = new THREE.Group();
+  [
+    { r:1.022, color:0x0099cc, opacity:0.07 },
+    { r:1.017, color:0x00ccff, opacity:0.18 },
+    { r:1.013, color:0x66eeff, opacity:0.40 },
+    { r:1.010, color:0xffffff, opacity:0.95 },
+  ].forEach(({ r, color, opacity }) => {
+    const geo = new THREE.BufferGeometry().setFromPoints(saBorder.map(([a,b]) => ll(a,b,r)));
+    const mat = new THREE.LineBasicMaterial({ color, transparent:true, opacity, depthTest:true });
+    const line = new THREE.LineLoop(geo, mat);
+    line.renderOrder = 2;
+    saGroup.add(line);
+  });
+  scene.add(saGroup);
   let radarScale=0;
   const radarMat=new THREE.MeshBasicMaterial({color:0x00ff88,transparent:true,opacity:.8,side:THREE.DoubleSide});
   const radar=new THREE.Mesh(new THREE.RingGeometry(0.12,0.14,32),radarMat);
@@ -121,7 +160,7 @@ function initGlobe(){
   const sg=new THREE.BufferGeometry(); sg.setAttribute('position',new THREE.Float32BufferAttribute(sv,3));
   scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:.012,transparent:true,opacity:.6})));
   let t=0;
-  const objs=[globe,wire,saLine,saSprite,radar];
+  const objs=[globe,wire,worldGroup,saGroup,radar];
   function animate(){requestAnimationFrame(animate);t+=0.004;objs.forEach(o=>o.rotation.y+=0.002);radarScale=(Math.sin(t*3)+1)/2;radar.scale.set(1+radarScale*1.5,1+radarScale*1.5,1);radarMat.opacity=0.7*(1-radarScale*.8);renderer.render(scene,camera);}
   animate();
   let drag=false,px=0;
