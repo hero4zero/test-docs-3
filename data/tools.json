@@ -8,7 +8,6 @@
     { "name": "openclaw",     "description": "Open-source alternative Claude client with extended context window management and tool-use support.", "envs": ["WAN","HPC"], "doc_path": "docs/data-labeling.md" },
     { "name": "N8N",          "description": "Low-code workflow automation platform. Build AI pipelines, data ingestion flows, and alert integrations visually.", "envs": ["WAN"], "doc_path": "docs/data-labeling.md" },
     { "name": "Hermes Agents","description": "Multi-agent orchestration framework designed for structured reasoning and long-horizon task execution.", "envs": ["HPC"], "doc_path": "docs/data-labeling.md" },
-    { "name": "vLLM Server",  "description": "High-throughput inference engine with PagedAttention, speculative decoding, and tensor parallelism support.", "envs": ["HPC"], "doc_path": "docs/data-labeling.md" },
-    { "name": "Data Labeling","description": "Integrated labeling platform for supervised fine-tuning datasets. Supports text, image, and structured outputs.", "envs": ["WAN","HPC"], "doc_path": "docs/data-labeling.md" }
+    { "name": "vLLM Server",  "description": "High-throughput inference engine with PagedAttention, speculative decoding, and tensor parallelism support.", "envs": ["HPC"], "doc_path": "docs/data-labeling.md" }
   ]
 }
