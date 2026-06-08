@@ -119,31 +119,48 @@ function initGlobe(){
       });
     })
     .catch(() => {});
-  // Accurate Saudi Arabia border — clockwise from NW (Gulf of Aqaba)
+  // Saudi Arabia border — from world-atlas 110m topojson (ISO 682)
   const saBorder = [
-    [29.5,34.9],[29.1,35.7],[29.7,36.5],[30.5,37.0],[31.0,37.7],[32.0,38.9],
-    [32.0,39.2],[32.0,40.5],[31.8,42.0],[31.0,43.5],[30.0,44.7],[29.3,45.6],[29.1,46.5],
-    [28.5,47.5],[28.0,48.1],
-    [27.5,48.8],[26.6,49.9],[25.8,50.3],[25.3,50.8],[24.8,51.2],[24.2,51.6],
-    [23.8,51.8],[23.2,52.5],[22.8,53.5],[22.5,55.0],[22.1,55.7],
-    [21.0,57.0],[20.0,57.8],[19.2,57.5],[18.6,56.2],
-    [18.0,53.8],[17.5,51.0],[16.8,47.8],[16.2,45.0],[15.6,42.8],
-    [16.5,42.1],[17.5,41.5],[18.5,41.0],[19.5,40.5],[21.0,39.5],
-    [22.5,38.8],[24.0,37.5],[25.5,36.8],[27.0,35.8],[28.3,35.1],[29.5,34.9]
+    [29.36,34.95],[29.2,36.07],[29.51,36.5],[29.87,36.74],[30.0,37.5],[30.34,37.67],[30.51,38.0],
+    [31.51,37.0],[32.01,39.0],[32.16,39.2],[31.89,40.4],[31.19,41.89],[29.18,44.71],
+    [29.1,46.57],[29.0,47.46],[28.53,47.71],[28.55,48.42],
+    [27.69,48.81],[27.46,49.3],[27.11,49.47],[26.69,50.15],[26.28,50.21],[25.94,50.11],
+    [25.61,50.24],[25.33,50.53],[25.0,50.66],[24.75,50.81],[24.56,51.11],[24.63,51.39],
+    [24.24,51.58],[24.01,51.62],[23.0,52.0],[22.5,55.01],[22.71,55.21],[22.0,55.67],
+    [20.0,55.0],[19.0,52.0],[18.62,49.12],[18.17,48.18],[17.12,47.47],[16.95,47.0],
+    [17.28,46.75],[17.23,46.37],[17.33,45.4],[17.43,45.22],[17.41,44.06],[17.32,43.79],
+    [17.58,43.38],[17.09,43.12],[16.67,43.22],[16.35,42.78],[16.77,42.65],[17.08,42.35],
+    [17.47,42.27],[17.83,41.76],[18.67,41.22],[19.49,40.94],[20.17,40.25],[20.34,39.8],
+    [21.29,39.14],[21.99,39.02],[22.58,39.07],[23.69,38.49],[24.08,38.03],[24.29,37.49],
+    [24.86,37.15],[25.08,37.21],[25.6,36.93],[25.83,36.64],[26.57,36.25],[27.38,35.64],
+    [28.06,35.13],[28.06,34.63],[28.61,34.79],[28.96,34.83],[29.36,34.95]
   ];
-  // Glow layers: outermost (wide/transparent) → core (thin/white)
   const saGroup = new THREE.Group();
+  // Filled interior glow — triangulated polygon remapped onto sphere
+  const saShape = new THREE.Shape(saBorder.map(([lat,lon]) => new THREE.Vector2(lon,lat)));
   [
-    { r:1.022, color:0x0099cc, opacity:0.07 },
-    { r:1.017, color:0x00ccff, opacity:0.18 },
-    { r:1.013, color:0x66eeff, opacity:0.40 },
-    { r:1.010, color:0xffffff, opacity:0.95 },
-  ].forEach(({ r, color, opacity }) => {
-    const geo = new THREE.BufferGeometry().setFromPoints(saBorder.map(([a,b]) => ll(a,b,r)));
-    const mat = new THREE.LineBasicMaterial({ color, transparent:true, opacity, depthTest:true });
-    const line = new THREE.LineLoop(geo, mat);
-    line.renderOrder = 2;
-    saGroup.add(line);
+    {r:1.022,color:0x004466,opacity:0.18},
+    {r:1.014,color:0x007799,opacity:0.28},
+    {r:1.007,color:0x00ccdd,opacity:0.22},
+    {r:1.002,color:0x00eeff,opacity:0.14},
+  ].forEach(({r,color,opacity}) => {
+    const geo = new THREE.ShapeGeometry(saShape,2);
+    const pos = geo.attributes.position;
+    for(let i=0;i<pos.count;i++){const v=ll(pos.getY(i),pos.getX(i),r);pos.setXYZ(i,v.x,v.y,v.z);}
+    pos.needsUpdate=true;
+    const mat = new THREE.MeshBasicMaterial({color,transparent:true,opacity,side:THREE.DoubleSide,depthTest:false,depthWrite:false});
+    const mesh = new THREE.Mesh(geo,mat); mesh.renderOrder=1; saGroup.add(mesh);
+  });
+  // Border glow lines — wide outer halo → tight bright cyan/white core
+  [
+    {r:1.028,color:0x0088bb,opacity:0.08},
+    {r:1.022,color:0x00ccee,opacity:0.25},
+    {r:1.016,color:0x55eeff,opacity:0.55},
+    {r:1.011,color:0xeeffff,opacity:0.98},
+  ].forEach(({r,color,opacity}) => {
+    const geo = new THREE.BufferGeometry().setFromPoints(saBorder.map(([a,b])=>ll(a,b,r)));
+    const mat = new THREE.LineBasicMaterial({color,transparent:true,opacity,depthTest:false,depthWrite:false});
+    const line = new THREE.LineLoop(geo,mat); line.renderOrder=3; saGroup.add(line);
   });
   scene.add(saGroup);
   let radarScale=0;
@@ -161,6 +178,8 @@ function initGlobe(){
   scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:.012,transparent:true,opacity:.6})));
   let t=0;
   const objs=[globe,wire,worldGroup,saGroup,radar];
+  // Start with Saudi Arabia facing the camera (lon≈45°E → rotation ≈ 3π/4)
+  objs.forEach(o => o.rotation.y = 3.93);
   function animate(){requestAnimationFrame(animate);t+=0.004;objs.forEach(o=>o.rotation.y+=0.002);radarScale=(Math.sin(t*3)+1)/2;radar.scale.set(1+radarScale*1.5,1+radarScale*1.5,1);radarMat.opacity=0.7*(1-radarScale*.8);renderer.render(scene,camera);}
   animate();
   let drag=false,px=0;
