@@ -64,7 +64,15 @@
   <div id="content">
 
     <!-- OVERVIEW -->
-    <div id="page-overview" class="page active">
+    <div id="page-overview" class="page active ov-layout">
+
+      <!-- Title -->
+      <div id="ov-title">
+        <div class="ov-title-main">Ai Hub</div>
+        <div class="ov-title-sub">Provided by: Ai Services Department</div>
+      </div>
+
+      <!-- Globe + metrics -->
       <div id="cfg-banner-overview" class="page-loading"><div class="spin"></div></div>
       <div id="globe-container" style="display:none;">
         <div class="side-cards left" style="grid-column:1;grid-row:2;">
@@ -80,9 +88,15 @@
           <div class="env-badge"><div class="dot" style="background:var(--cyan)"></div><span style="font-size:11px;font-weight:600;color:var(--text2);">DEV</span><span id="badge-dev" style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--cyan);"></span></div>
           <div class="env-badge"><div class="dot" style="background:var(--green)"></div><span style="font-size:11px;font-weight:600;color:var(--text2);">PROD</span><span id="badge-prod" style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--cyan);"></span></div>
           <div class="env-badge"><div class="dot" style="background:var(--yellow)"></div><span style="font-size:11px;font-weight:600;color:var(--text2);">HPC</span><span id="badge-hpc" style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--cyan);"></span></div>
-          <div class="news-ticker" style="min-width:300px;"><span class="tag">NEWS</span><span id="news-text" style="color:var(--text2);font-size:11px;"></span></div>
         </div>
       </div>
+
+      <!-- News feed -->
+      <div id="news-section" style="display:none;">
+        <div class="news-section-label">NEWS</div>
+        <div id="news-feed"></div>
+      </div>
+
     </div>
 
     <!-- ENVIRONMENTS -->

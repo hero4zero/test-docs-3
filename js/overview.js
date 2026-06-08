@@ -1,3 +1,32 @@
+const NEWS_TAG_COLOR = {
+  HPC:  { cls: 'news-tag-HPC',  icon: '#ffcc00', bg: 'rgba(255,204,0,.12)'  },
+  PROD: { cls: 'news-tag-PROD', icon: '#00ff88', bg: 'rgba(0,255,136,.08)'  },
+  DEV:  { cls: 'news-tag-DEV',  icon: '#00c8ff', bg: 'rgba(0,200,255,.08)'  },
+};
+
+function renderNewsFeed(items) {
+  const feed = document.getElementById('news-feed');
+  feed.innerHTML = items.map(item => {
+    const env  = item.env ?? 'DEV';
+    const cfg  = NEWS_TAG_COLOR[env] ?? NEWS_TAG_COLOR.DEV;
+    const text = item.text ?? item;
+    return `
+      <div class="news-row">
+        <div class="news-row-left">
+          <span class="news-row-tag ${cfg.cls}">${env}</span>
+          <span class="news-row-text">${text}</span>
+        </div>
+        <div class="news-row-icon" style="background:${cfg.bg};">
+          <svg viewBox="0 0 24 24" fill="none" stroke="${cfg.icon}" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14M15.54 8.46a5 5 0 010 7.07M8.46 8.46a5 5 0 000 7.07"/>
+          </svg>
+        </div>
+      </div>`;
+  }).join('');
+  document.getElementById('news-section').style.display = 'block';
+}
+
 async function loadOverview() {
   const spinner = document.getElementById('cfg-banner-overview');
   try {
@@ -18,10 +47,7 @@ async function loadOverview() {
     document.getElementById('badge-prod').textContent = d.badges?.prod ?? '';
     document.getElementById('badge-hpc').textContent  = d.badges?.hpc  ?? '';
 
-    const news = d.news ?? ['No news'];
-    let ni = 0;
-    const tick = () => { document.getElementById('news-text').textContent = news[ni % news.length]; ni++; };
-    tick(); setInterval(tick, 4000);
+    renderNewsFeed(d.news ?? []);
 
     initGlobe();
   } catch (e) { showError(spinner, e.message); }

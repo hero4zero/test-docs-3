@@ -21,9 +21,12 @@
     "hpc":  "504 GPUs · 4 Models"
   },
   "news": [
-    "DeepSeek-R1 deployed in HPC env · https://aigatwa.llm.llmss",
-    "New H200 nodes added to HPC cluster — 8 GPUs online",
-    "vLLM updated to v0.8.1 across all environments",
-    "OpenWebUI v3.2 available on WAN network"
+    { "env": "HPC",  "text": "NVIDIA A100 80GB — GPU nodes upgraded and validated in HPC cluster" },
+    { "env": "HPC",  "text": "DeepSeek-R1 successfully deployed across 4 × H100 nodes" },
+    { "env": "HPC",  "text": "New H200 141GB nodes online — 8 GPUs added to HPC pool" },
+    { "env": "PROD", "text": "vLLM updated to v0.8.1 with PagedAttention improvements" },
+    { "env": "PROD", "text": "LiteLLM gateway load-balancing rules updated for production" },
+    { "env": "DEV",  "text": "Model evaluation pipeline deployed and ready for testing" },
+    { "env": "DEV",  "text": "OpenWebUI v3.2 available on WAN network for dev access" }
   ]
 }

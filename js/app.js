@@ -28,14 +28,17 @@ document.getElementById('hdr-repo-link').innerHTML =
 // ── GitHub raw fetch helpers ──
 const RAW = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/`;
 const API = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/`;
+const IS_LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
 async function ghJSON(path) {
-  const r = await fetch(RAW + path, {signal: AbortSignal.timeout(8000)});
+  const url = IS_LOCAL ? path : RAW + path;
+  const r = await fetch(url, {signal: AbortSignal.timeout(8000)});
   if (!r.ok) throw new Error(`${r.status} – ${path}`);
   return r.json();
 }
 async function ghMD(path) {
-  const r = await fetch(RAW + path, {signal: AbortSignal.timeout(8000)});
+  const url = IS_LOCAL ? path : RAW + path;
+  const r = await fetch(url, {signal: AbortSignal.timeout(8000)});
   if (!r.ok) throw new Error(`${r.status} – ${path}`);
   return r.text();
 }
