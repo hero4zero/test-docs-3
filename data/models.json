@@ -1,22 +1,20 @@
 {
-  "subtitle": "15 active deployments across 3 environments",
+  "subtitle": "------------------------------",
   "environments": [
     {
       "tag": "HPC",
-      "label": "HPC Environment",
-      "endpoint": "https://llm-01llm.llms",
+      "label": "HPC",
+      "endpoint": "https://aigateway.estishraf.gov.sa",
       "models": [
-        { "name": "DeepSeek-R1", "nodes": "Nodes: 4× H100", "gpus": "GPUs: 32 total", "active": true },
-        { "name": "GPT-5.5",     "nodes": "Nodes: 2× H100", "gpus": "GPUs: 16 total", "active": false }
+        { "name": "Access the WAN environment to retrieve the models" }
       ]
     },
     {
       "tag": "PROD",
       "label": "Production",
-      "endpoint": "https://llm-02llm.llms",
+      "endpoint": "https://llm.estishraf.gov.sa",
       "models": [
-        { "name": "DeepSeek-R1", "nodes": "Nodes: 4× H100", "gpus": "GPUs: 32 total", "active": true },
-        { "name": "GPT-5.5",     "nodes": "Nodes: 2× H100", "gpus": "GPUs: 16 total", "active": false }
+        { "name": "Access the WAN environment to retrieve the models."}
       ]
     },
     {
