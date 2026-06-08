@@ -1,0 +1,29 @@
+[
+  {
+    "section": "Getting Started",
+    "items": [
+      { "id": "intro",   "title": "Introduction",          "icon": "🚀", "path": "docs/introduction.md",         "section": "Getting Started", "badge": "START", "badge_bg": "rgba(0,255,136,.12)", "badge_color": "var(--green)" },
+      { "id": "install", "title": "Installation & Setup",  "icon": "⚙️", "path": "docs/installation.md",         "section": "Getting Started" }
+    ]
+  },
+  {
+    "section": "Tools",
+    "items": [
+      { "id": "labeling","title": "Data Labeling Tool",           "icon": "🏷️", "path": "docs/data-labeling.md",          "section": "Tools" },
+      { "id": "ocr",     "title": "Text Recognition API",         "icon": "📝", "path": "docs/text-recognition-api.md",   "section": "Tools" },
+      { "id": "eval",    "title": "Model Evaluation Service",     "icon": "📊", "path": "docs/model-evaluation.md",       "section": "Tools" }
+    ]
+  },
+  {
+    "section": "Reference",
+    "items": [
+      { "id": "api",     "title": "Full API Reference",           "icon": "📖", "path": "docs/api-reference.md",          "section": "Reference", "badge": "API", "badge_bg": "rgba(0,200,255,.1)", "badge_color": "var(--cyan)" }
+    ]
+  },
+  {
+    "section": "vLLM Guides",
+    "items": [
+      { "id": "vllm",    "title": "vLLM Tuning Guide",            "icon": "⚡", "path": "docs/vllm-tuning.md",            "section": "vLLM Guides", "badge": "NEW", "badge_bg": "rgba(255,204,0,.1)", "badge_color": "var(--yellow)" }
+    ]
+  }
+]

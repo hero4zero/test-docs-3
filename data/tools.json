@@ -1,0 +1,14 @@
+{
+  "tools": [
+    { "name": "OpenWebUI",    "description": "Open-source ChatGPT-style interface for local/remote LLMs. Supports model switching, plugins, and multimodal inputs.", "envs": ["WAN","HPC"], "doc_path": "docs/data-labeling.md" },
+    { "name": "LiteLLM",      "description": "Unified API gateway to 100+ LLM providers. Enables cost tracking, load balancing, and fallback routing.", "envs": ["WAN","HPC"], "doc_path": "docs/data-labeling.md" },
+    { "name": "Opencode",     "description": "AI-powered code editor and terminal assistant. Connects to your deployed models for in-context completions.", "envs": ["WAN"], "doc_path": "docs/data-labeling.md" },
+    { "name": "HolmesGPT",    "description": "Kubernetes-native AI assistant for debugging pod failures and analyzing cluster incidents automatically.", "envs": ["HPC"], "doc_path": "docs/data-labeling.md" },
+    { "name": "Claude Code",  "description": "Agentic coding assistant by Anthropic. Operates on your local filesystem with full repo awareness.", "envs": ["WAN"], "info_url": "https://docs.anthropic.com/claude-code", "doc_path": "docs/data-labeling.md" },
+    { "name": "openclaw",     "description": "Open-source alternative Claude client with extended context window management and tool-use support.", "envs": ["WAN","HPC"], "doc_path": "docs/data-labeling.md" },
+    { "name": "N8N",          "description": "Low-code workflow automation platform. Build AI pipelines, data ingestion flows, and alert integrations visually.", "envs": ["WAN"], "doc_path": "docs/data-labeling.md" },
+    { "name": "Hermes Agents","description": "Multi-agent orchestration framework designed for structured reasoning and long-horizon task execution.", "envs": ["HPC"], "doc_path": "docs/data-labeling.md" },
+    { "name": "vLLM Server",  "description": "High-throughput inference engine with PagedAttention, speculative decoding, and tensor parallelism support.", "envs": ["HPC"], "doc_path": "docs/data-labeling.md" },
+    { "name": "Data Labeling","description": "Integrated labeling platform for supervised fine-tuning datasets. Supports text, image, and structured outputs.", "envs": ["WAN","HPC"], "doc_path": "docs/data-labeling.md" }
+  ]
+}

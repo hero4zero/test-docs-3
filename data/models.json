@@ -1,0 +1,32 @@
+{
+  "subtitle": "15 active deployments across 3 environments",
+  "environments": [
+    {
+      "tag": "HPC",
+      "label": "HPC Environment",
+      "endpoint": "https://llm-01llm.llms",
+      "models": [
+        { "name": "DeepSeek-R1", "nodes": "Nodes: 4× H100", "gpus": "GPUs: 32 total", "active": true },
+        { "name": "GPT-5.5",     "nodes": "Nodes: 2× H100", "gpus": "GPUs: 16 total", "active": false }
+      ]
+    },
+    {
+      "tag": "PROD",
+      "label": "Production",
+      "endpoint": "https://llm-02llm.llms",
+      "models": [
+        { "name": "DeepSeek-R1", "nodes": "Nodes: 4× H100", "gpus": "GPUs: 32 total", "active": true },
+        { "name": "GPT-5.5",     "nodes": "Nodes: 2× H100", "gpus": "GPUs: 16 total", "active": false }
+      ]
+    },
+    {
+      "tag": "DEV",
+      "label": "Development",
+      "endpoint": "https://llm-03llm.llms",
+      "models": [
+        { "name": "DeepSeek-R1", "nodes": "Nodes: 4× H100", "gpus": "GPUs: 32 total", "active": true },
+        { "name": "GPT-5.5",     "nodes": "Nodes: 2× H100", "gpus": "GPUs: 16 total", "active": false }
+      ]
+    }
+  ]
+}

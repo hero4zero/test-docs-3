@@ -1,0 +1,47 @@
+[
+  {
+    "tag": "HPC",
+    "name": "HPC Cluster",
+    "nodes": [
+      { "type": "H100", "count": 3 },
+      { "type": "H200", "count": 1 }
+    ],
+    "gpus": [
+      { "type": "H100 80GB", "count": 23 },
+      { "type": "H200 141GB", "count": 8 }
+    ],
+    "utilization": 78,
+    "status": "Healthy",
+    "summary": "4 models running · 504 total GPUs"
+  },
+  {
+    "tag": "PROD",
+    "name": "Production",
+    "nodes": [
+      { "type": "H100", "count": 3 },
+      { "type": "H200", "count": 1 }
+    ],
+    "gpus": [
+      { "type": "H100 80GB", "count": 23 },
+      { "type": "H200 141GB", "count": 8 }
+    ],
+    "utilization": 55,
+    "status": "Healthy",
+    "summary": "6 models running · 44 total GPUs"
+  },
+  {
+    "tag": "DEV",
+    "name": "Development",
+    "nodes": [
+      { "type": "H100", "count": 3 },
+      { "type": "H200", "count": 1 }
+    ],
+    "gpus": [
+      { "type": "H100 80GB", "count": 23 },
+      { "type": "H200 141GB", "count": 8 }
+    ],
+    "utilization": 25,
+    "status": "Healthy",
+    "summary": "5 models running · 4 total GPUs"
+  }
+]
