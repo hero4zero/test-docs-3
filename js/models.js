@@ -8,11 +8,34 @@ async function fetchLiveModels(endpoint, apiKey) {
   const json = await r.json();
   return (json.data ?? []).map(m => ({
     name: m.id,
-    nodes: m.owned_by ? `Owner: ${m.owned_by}` : '',
+    nodes: '',
     gpus: '',
-    active: true,
+    active: null, // null = checking
     live: true,
   }));
+}
+
+// Fire health check for one model, update its status badge in DOM
+async function checkModelHealth(endpoint, apiKey, modelId) {
+  const headers = apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {};
+  const encoded = encodeURIComponent(modelId);
+  try {
+    const r = await fetch(`${endpoint}/health?model=${encoded}`, {
+      headers,
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!r.ok) return false;
+    const json = await r.json();
+    return (json.healthy_count ?? 0) > 0;
+  } catch (_) {
+    return false;
+  }
+}
+
+function statusBadge(active) {
+  if (active === null)
+    return `<span class="model-status s-checking"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block;"></span> Checking…</span>`;
+  return `<span class="model-status ${active ? 's-active' : 's-inactive'}"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block;"></span> ${active ? 'Active' : 'Offline'}</span>`;
 }
 
 async function loadModels() {
@@ -22,13 +45,13 @@ async function loadModels() {
     banner.style.display = 'none';
     document.getElementById('models-subtitle').textContent = data.subtitle ?? '';
 
-    // Fetch live models for DEV in parallel with rendering
+    // Fetch live models for DEV
     const liveMap = {};
     await Promise.all(data.environments.map(async env => {
       if (env.tag === 'DEV') {
         try {
           liveMap['DEV'] = await fetchLiveModels(env.endpoint, env.apiKey);
-        } catch (_) { /* fall back to static */ }
+        } catch (_) {}
       }
     }));
 
@@ -48,15 +71,24 @@ async function loadModels() {
         ${isLive ? `<span class="model-live-badge" style="color:${col};font-size:9px;font-weight:700;letter-spacing:1px;margin-left:8px;opacity:0.8;">● LIVE</span>` : ''}
         <a class="model-link" href="${env.endpoint}" target="_blank">↗ ${env.endpoint}</a>
         ${models.map(m => `
-          <div class="model-item">
+          <div class="model-item" data-model="${encodeURIComponent(m.name)}" data-env="${env.tag}">
             <div class="model-name">${m.name}</div>
             <div class="model-detail">${m.nodes ?? ''}${m.gpus ? '<br/>' + m.gpus : ''}</div>
-            <span class="model-status ${m.active ? 's-active' : 's-inactive'}">
-              <span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block;"></span>
-              ${m.active ? 'Active' : 'Offline'}
-            </span>
+            ${statusBadge(m.active)}
           </div>`).join('')}
       </div>`;
     }).join('');
+
+    // Fire parallel health checks for all live DEV models
+    const devEnv = data.environments.find(e => e.tag === 'DEV');
+    if (devEnv && liveMap['DEV']) {
+      liveMap['DEV'].forEach(m => {
+        checkModelHealth(devEnv.endpoint, devEnv.apiKey, m.name).then(active => {
+          const el = grid.querySelector(`[data-model="${encodeURIComponent(m.name)}"][data-env="DEV"] .model-status`);
+          if (el) el.outerHTML = statusBadge(active);
+        });
+      });
+    }
+
   } catch (e) { showError(banner, e.message); }
 }

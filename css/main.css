@@ -121,6 +121,8 @@ html,body{height:100%;overflow:hidden;font-family:'Syne',sans-serif;background:v
 .model-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;margin-top:5px;}
 .s-active{background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.2);}
 .s-inactive{background:rgba(255,68,102,.1);color:var(--red);border:1px solid rgba(255,68,102,.2);}
+.s-checking{background:rgba(255,204,0,.08);color:var(--yellow);border:1px solid rgba(255,204,0,.2);animation:pulse-check 1.2s ease-in-out infinite;}
+@keyframes pulse-check{0%,100%{opacity:.5}50%{opacity:1}}
 .model-link{display:block;margin-top:8px;font-size:10px;color:var(--cyan);font-family:'JetBrains Mono',monospace;text-decoration:none;opacity:.6;}
 .model-link:hover{opacity:1;}
 

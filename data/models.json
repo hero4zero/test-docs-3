@@ -22,8 +22,8 @@
     {
       "tag": "DEV",
       "label": "Development",
-      "endpoint": "https://",
-      "apiKey": "sk-",
+      "endpoint": "https://llm.ingress.dev.estishraf.gov.sa",
+      "apiKey": "sk-20pgwPTT8a568pKsU2gEBA",
       "models": []
     }
   ]
