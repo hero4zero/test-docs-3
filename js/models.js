@@ -79,14 +79,29 @@ async function loadModels() {
       </div>`;
     }).join('');
 
-    // Fire parallel health checks for all live DEV models
+    // Fire parallel health checks for all live DEV models, then sort active first
     const devEnv = data.environments.find(e => e.tag === 'DEV');
     if (devEnv && liveMap['DEV']) {
-      liveMap['DEV'].forEach(m => {
+      const checks = liveMap['DEV'].map(m =>
         checkModelHealth(devEnv.endpoint, devEnv.apiKey, m.name).then(active => {
+          // Update badge immediately as each check resolves
           const el = grid.querySelector(`[data-model="${encodeURIComponent(m.name)}"][data-env="DEV"] .model-status`);
           if (el) el.outerHTML = statusBadge(active);
-        });
+          return { name: m.name, active };
+        })
+      );
+
+      // After all checks done, re-sort the card: active first, offline below
+      Promise.allSettled(checks).then(results => {
+        const activeSet = new Set(
+          results.filter(r => r.status === 'fulfilled' && r.value.active).map(r => r.value.name)
+        );
+        const card = grid.querySelector('[data-env="DEV"]')?.closest('.model-card');
+        if (!card) return;
+        const items = [...card.querySelectorAll('.model-item[data-env="DEV"]')];
+        const active = items.filter(el => activeSet.has(decodeURIComponent(el.dataset.model)));
+        const offline = items.filter(el => !activeSet.has(decodeURIComponent(el.dataset.model)));
+        [...active, ...offline].forEach(el => card.appendChild(el));
       });
     }
 
