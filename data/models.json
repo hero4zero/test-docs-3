@@ -22,7 +22,7 @@
     {
       "tag": "DEV",
       "label": "Development",
-      "endpoint": "https://llm-03llm.llms",
+      "endpoint": "https://llm.ingress.dev.estishraf.gov.sa",
       "models": [
         { "name": "DeepSeek-R1", "nodes": "Nodes: 4× H100", "gpus": "GPUs: 32 total", "active": true },
         { "name": "GPT-5.5",     "nodes": "Nodes: 2× H100", "gpus": "GPUs: 16 total", "active": false }
