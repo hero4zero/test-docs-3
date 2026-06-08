@@ -1,7 +1,7 @@
 {
   "active_models": {
-    "total": 15,
-    "breakdown": "Dev: 5 · Prod: 6 · HPC: 4"
+    "total": 16,
+    "breakdown": "Dev: 55 · Prod: 6 · HPC: 4"
   },
   "environments": {
     "total": 3,
